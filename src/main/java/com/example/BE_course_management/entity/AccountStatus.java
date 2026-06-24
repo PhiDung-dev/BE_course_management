@@ -5,11 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum ClassRoomStatus {
-
-    AVAILABLE("Available"),
-    OCCUPIED("Occupied"),
-    MAINTENANCE("Maintenance");
+public enum AccountStatus {
+    ACTIVE("Account is active"),
+    BLOCKED("Account is blocked");
 
     private final String status;
 }

@@ -9,4 +9,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CartResponse {
+    String id;
+    CourseResponse course;
+    UserResponse user;
+
+
 }

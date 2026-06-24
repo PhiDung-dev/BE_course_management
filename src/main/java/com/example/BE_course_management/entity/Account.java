@@ -19,7 +19,8 @@ public class Account {
     @Column(unique = true)
     String username;
     String password;
-
+    @Enumerated(EnumType.STRING)
+    AccountStatus status;
     @ManyToOne
     @JoinColumn(name = "role_id")
     Role role;

@@ -18,6 +18,7 @@ public class Payment {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    @Enumerated(EnumType.STRING)
     PaymentStatus status;
     BigDecimal amount;
 
