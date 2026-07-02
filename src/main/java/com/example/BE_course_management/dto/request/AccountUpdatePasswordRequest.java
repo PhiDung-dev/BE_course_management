@@ -10,8 +10,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AccountUpdateRequest {
 
-    String username;
     String password;
-
+    String confirmPassword;
 
 }
