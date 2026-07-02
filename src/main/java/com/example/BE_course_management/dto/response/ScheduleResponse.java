@@ -1,12 +1,5 @@
 package com.example.BE_course_management.dto.response;
 
-import com.example.BE_course_management.entity.ClassRoom;
-import com.example.BE_course_management.entity.Course;
-import com.example.BE_course_management.entity.User;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -20,13 +13,15 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class ScheduleResponse {
+
     String id;
     LocalTime startTime;
     LocalTime endTime;
     DayOfWeek dayOfWeek;
     LocalDate startDate;
     LocalDate endDate;
-    ClassRoom classRoom;
+    ClassRoomResponse classRoom;
     CourseResponse course;
     UserResponse teacher;
+
 }

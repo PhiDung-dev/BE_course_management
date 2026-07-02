@@ -1,6 +1,5 @@
 package com.example.BE_course_management.service;
 
-import com.example.BE_course_management.dto.ApiResponse;
 import com.example.BE_course_management.dto.request.ClassRoomCreateRequest;
 import com.example.BE_course_management.dto.request.ClassRoomUpdateRequest;
 import com.example.BE_course_management.dto.response.ClassRoomResponse;
@@ -18,50 +17,40 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-@FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ClassRoomService {
 
     ClassRoomMapper classRoomMapper;
     ClassRoomRepository classRoomRepository;
 
-    public ClassRoomResponse createClassRoom(ClassRoomCreateRequest request)
-    {
+    public ClassRoomResponse createClassRoom(ClassRoomCreateRequest request) {
+        if(classRoomRepository.existsByRoomNumber(request.getRoomNumber())) {
+            throw new AppException(ErrorCode.CLASSROOM_EXISTED);
+        }
         ClassRoom classRoom = classRoomMapper.toClassRoom(request);
-        ClassRoom saveClassRoom = classRoomRepository.save(classRoom);
-
-        return classRoomMapper.toClassRoomResponse(saveClassRoom);
+        return classRoomMapper.toClassRoomResponse(classRoomRepository.save(classRoom));
     }
 
-    public ClassRoomResponse updateClassRoom(String id ,ClassRoomUpdateRequest request)
-    {
-        ClassRoom classRoom = classRoomRepository.findById(id)
-                .orElseThrow(()->new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
-                classRoomMapper.updateClassRoom(classRoom,request);
-                ClassRoom saveClassRoom = classRoomRepository.save(classRoom);
-
-            return classRoomMapper.toClassRoomResponse(saveClassRoom);
+    public List<ClassRoomResponse> readClassRooms() {
+        return classRoomMapper.toClassRoomResponseList(classRoomRepository.findAll());
     }
 
-    public ClassRoomResponse readClassRoom(String id)
-    {
-        ClassRoom classRoom = classRoomRepository.findById(id)
-                .orElseThrow(()->new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
-
+    public ClassRoomResponse readClassRoom(String id) {
+        ClassRoom classRoom = classRoomRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
         return classRoomMapper.toClassRoomResponse(classRoom);
-
-    }
-    public List<ClassRoomResponse> readClassRooms()
-    {
-        List<ClassRoom> classList = classRoomRepository.findAll();
-        return classRoomMapper.toClassRoomResponseList(classList);
     }
 
-    public void deleteClassRoom(String id)
-    {
-        ClassRoom classRoom = classRoomRepository.findById(id)
-                .orElseThrow(()->new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
-        classRoomRepository.delete(classRoom);
+    public ClassRoomResponse updateClassRoom(String id, ClassRoomUpdateRequest request) {
+        ClassRoom classRoom = classRoomRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
+        classRoomMapper.updateClassRoom(classRoom,request);
+        return classRoomMapper.toClassRoomResponse(classRoomRepository.save(classRoom));
     }
 
+    public void deleteClassRoom(String id) {
+        if(!classRoomRepository.existsById(id)) {
+            throw new AppException(ErrorCode.CLASSROOM_NOT_FOUND);
+        }
+        classRoomRepository.deleteById(id);
+    }
 
 }

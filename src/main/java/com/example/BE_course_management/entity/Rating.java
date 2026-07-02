@@ -16,7 +16,7 @@ public class Rating {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    int score;
+    Integer score;
     @Lob
     String comment;
 

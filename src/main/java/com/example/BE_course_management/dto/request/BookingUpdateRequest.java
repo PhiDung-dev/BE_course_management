@@ -1,6 +1,5 @@
 package com.example.BE_course_management.dto.request;
 
-import com.example.BE_course_management.entity.BookingStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BookingUpdateRequest {
 
-    BookingStatus status;
+    String status;
 
 }

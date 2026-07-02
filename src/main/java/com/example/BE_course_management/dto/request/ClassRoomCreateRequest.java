@@ -1,6 +1,5 @@
 package com.example.BE_course_management.dto.request;
 
-import com.example.BE_course_management.entity.ClassRoomStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,6 +11,6 @@ import lombok.experimental.FieldDefaults;
 public class ClassRoomCreateRequest {
 
     String roomNumber;
-    ClassRoomStatus status;
+    String status;
 
 }

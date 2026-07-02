@@ -21,41 +21,34 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserService {
+
     UserRepository userRepository;
     AccountRepository accountRepository;
     UserMapper userMapper;
 
-    public UserResponse createUser(UserCreateRequest request)
-    {
-        Account account = accountRepository.findById(request.getAccountId())
-                .orElseThrow(()->new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
+    public UserResponse createUser(UserCreateRequest request) {
+        Account account = accountRepository.findById(request.getAccountId()).orElseThrow(()->new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         User user = userMapper.toUser(request);
-        if(account.getUser()!=null){
-            throw new AppException(ErrorCode.ACCOUNT_EXISTED);
+        if(account.getUser()!=null) {
+            throw new AppException(ErrorCode.USER_EXISTED);
         }
         user.setAccount(account);
         return userMapper.toUserResponse(userRepository.save(user));
-
     }
-    public List<UserResponse> readUsers(){
+
+    public List<UserResponse> readUsers() {
         return userMapper.toUserResponseList(userRepository.findAll());
     }
 
-    public UserResponse readUser(String id)
-    {
+    public UserResponse readUser(String id) {
         User user = userRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
         return userMapper.toUserResponse(user);
     }
+
     public UserResponse updateUser(String id, UserUpdateRequest request) {
         User user = userRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
         userMapper.updateUser(user, request);
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-   /* public void deleteUser(String id){
-        if(!userRepository.existsById(id)){
-            throw new AppException(ErrorCode.USER_NOT_FOUND);
-        }
-        userRepository.deleteById(id);
-    }*/
 }

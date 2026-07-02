@@ -17,44 +17,35 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentController {
+
     PaymentService paymentService;
 
     @PostMapping
-    public ApiResponse<PaymentResponse> createPayment(@RequestBody PaymentCreateRequest request)
-    {
+    public ApiResponse<PaymentResponse> createPayment(@RequestBody PaymentCreateRequest request) {
         return ApiResponse.<PaymentResponse>builder()
                 .result(paymentService.createPayment(request))
                 .build();
     }
 
-    @PutMapping("/{paymentId}")
-    public ApiResponse<PaymentResponse> updatePayment(@PathVariable("paymentId") String paymentId, @RequestBody PaymentUpdateRequest request)
-    {
-        return ApiResponse.<PaymentResponse>builder()
-                .result(paymentService.updatePayment(paymentId,request))
-                .build();
-    }
     @GetMapping
-    public ApiResponse<List<PaymentResponse>> readPayments()
-    {
+    public ApiResponse<List<PaymentResponse>> readPayments() {
         return ApiResponse.<List<PaymentResponse>>builder()
                 .result(paymentService.readPayments())
                 .build();
     }
+
     @GetMapping("/{paymentId}")
-    public ApiResponse<PaymentResponse> readPayment(@PathVariable("paymentId") String paymentId)
-    {
+    public ApiResponse<PaymentResponse> readPayment(@PathVariable("paymentId") String id) {
         return ApiResponse.<PaymentResponse>builder()
-                .result(paymentService.readPayment(paymentId))
+                .result(paymentService.readPayment(id))
                 .build();
     }
-    @DeleteMapping("/{paymentId}")
-    public ApiResponse<String> cancelPayment(@PathVariable("paymentId") String paymentId)
-    {
-        paymentService.cancelPayment(paymentId);
-        return ApiResponse.<String>builder()
-                .code(1000)
-                .message("Payment has paymentId = "+ paymentId + "deleted succesfully")
+
+    @PutMapping("/{paymentId}")
+    public ApiResponse<PaymentResponse> updatePayment(@PathVariable("paymentId") String id, @RequestBody PaymentUpdateRequest request) {
+        return ApiResponse.<PaymentResponse>builder()
+                .result(paymentService.updatePayment(id, request))
                 .build();
     }
+
 }

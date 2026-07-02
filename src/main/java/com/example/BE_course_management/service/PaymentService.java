@@ -20,57 +20,40 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class PaymentService {
+
     PaymentMapper paymentMapper;
     PaymentRepository paymentRepository;
     BookingRepository bookingRepository;
 
-    public PaymentResponse createPayment(PaymentCreateRequest request)
-    {
-        Booking booking = bookingRepository.findById(request.getBookingId())
-                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
-        Payment payment = paymentMapper.toPayment(request);
-        payment.setBooking(booking);
-        Payment savedPayment = paymentRepository.save(payment);
-        return paymentMapper.toPaymentRespone(savedPayment);
+    public PaymentResponse createPayment(PaymentCreateRequest request) {
+        Booking booking = bookingRepository.findById(request.getBookingId()).orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_FOUND));
+        Payment payment = Payment.builder()
+                .status(PaymentStatus.PENDING)
+                .amount(booking.getTotalPrice())
+                .booking(booking)
+                .build();
+        return paymentMapper.toPaymentResponse(paymentRepository.save(payment));
     }
 
-    public PaymentResponse updatePayment(String id, PaymentUpdateRequest request) {
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
-
-
-        if (payment.getStatus() == PaymentStatus.SUCCESS)
-        {
-            throw new AppException(ErrorCode.PAYMENT_ALREADY_PROCESSED);
-        }
-            paymentMapper.updatePayment(payment, request);
-
-
-            Payment updatedPayment = paymentRepository.save(payment);
-
-            return paymentMapper.toPaymentRespone(updatedPayment);
-
-    }
-
-    public PaymentResponse readPayment(String id)
-    {
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(()->new AppException(ErrorCode.PAYMENT_NOT_FOUND));
-        return paymentMapper.toPaymentRespone(payment);
-    }
-    public List<PaymentResponse> readPayments()
-    {
+    public List<PaymentResponse> readPayments() {
         List<Payment> listPayment = paymentRepository.findAll();
         return paymentMapper.toPaymentResponseList(listPayment);
     }
-    public void cancelPayment(String id) {
-        Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
-        payment.setStatus(PaymentStatus.CANCELLED);
 
-        paymentRepository.save(payment);
+    public PaymentResponse readPayment(String id) {
+        Payment payment = paymentRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.PAYMENT_NOT_FOUND));
+        return paymentMapper.toPaymentResponse(payment);
+    }
+
+    public PaymentResponse updatePayment(String id, PaymentUpdateRequest request) {
+        Payment payment = paymentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
+            throw new AppException(ErrorCode.PAYMENT_ALREADY_PROCESSED);
+        }
+        paymentMapper.updatePayment(payment, request);
+        return paymentMapper.toPaymentResponse(paymentRepository.save(payment));
     }
 
 }

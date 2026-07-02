@@ -1,6 +1,5 @@
 package com.example.BE_course_management.dto.request;
 
-import com.example.BE_course_management.entity.PaymentStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -11,6 +10,6 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class PaymentUpdateRequest {
 
-    PaymentStatus status;
+    String status;
 
 }

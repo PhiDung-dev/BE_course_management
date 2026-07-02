@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum AccountStatus {
-    ACTIVE("Account is active"),
-    BLOCKED("Account is blocked");
+
+    ACTIVE("ACTIVE"),
+    BLOCKED("BLOCKED");
 
     private final String status;
+
 }

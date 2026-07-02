@@ -7,9 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ClassRoomStatus {
 
-    AVAILABLE("Available"),
-    OCCUPIED("Occupied"),
-    MAINTENANCE("Maintenance");
+    AVAILABLE("AVAILABLE"),
+    OCCUPIED("OCCUPIED"),
+    MAINTENANCE("MAINTENANCE");
 
     private final String status;
+
 }

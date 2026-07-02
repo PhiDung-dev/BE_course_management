@@ -17,45 +17,43 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ScheduleController {
+
     ScheduleService scheduleService;
 
     @PostMapping
-    public ApiResponse<ScheduleResponse> createSchedule(@RequestBody ScheduleCreateRequest request)
-    {
+    public ApiResponse<ScheduleResponse> createSchedule(@RequestBody ScheduleCreateRequest request) {
         return ApiResponse.<ScheduleResponse>builder()
                 .result(scheduleService.createSchedule(request))
                 .build();
     }
 
-    @PutMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> updateSchedule(@PathVariable("scheduleId") String scheduleId, @RequestBody ScheduleUpdateRequest request)
-    {
-        return ApiResponse.<ScheduleResponse>builder()
-                .result(scheduleService.updateSchedule(scheduleId,request))
-                .build();
-    }
-
-    @GetMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> readSchedule(@PathVariable("scheduleId") String scheduleId)
-    {
-        return ApiResponse.<ScheduleResponse>builder()
-                .result(scheduleService.readSchedule(scheduleId))
-                .build();
-    }
     @GetMapping
-    public ApiResponse<List<ScheduleResponse>> readSchedules()
-    {
+    public ApiResponse<List<ScheduleResponse>> readSchedules(){
         return ApiResponse.<List<ScheduleResponse>>builder()
                 .result(scheduleService.readSchedules())
                 .build();
     }
-    @DeleteMapping("/{scheduleId}")
-    public ApiResponse<String> deleteSchedule(@PathVariable("scheduleId") String scheduleId)
-    {
-        scheduleService.deleteSchedule(scheduleId);
-        return ApiResponse.<String>builder()
-                .code(1000)
-                .message("Schedule has scheduleId = "+ scheduleId +"deleted succesfully")
+
+    @GetMapping("/{scheduleId}")
+    public ApiResponse<ScheduleResponse> readSchedule(@PathVariable("scheduleId") String scheduleId) {
+        return ApiResponse.<ScheduleResponse>builder()
+                .result(scheduleService.readSchedule(scheduleId))
                 .build();
     }
+
+    @PutMapping("/{scheduleId}")
+    public ApiResponse<ScheduleResponse> updateSchedule(@PathVariable("scheduleId") String id, @RequestBody ScheduleUpdateRequest request) {
+        return ApiResponse.<ScheduleResponse>builder()
+                .result(scheduleService.updateSchedule(id,request))
+                .build();
+    }
+
+    @DeleteMapping("/{scheduleId}")
+    public ApiResponse<String> deleteSchedule(@PathVariable("scheduleId") String scheduleId) {
+        scheduleService.deleteSchedule(scheduleId);
+        return ApiResponse.<String>builder()
+                .message("Schedule has id = "+ scheduleId +"deleted successfully")
+                .build();
+    }
+
 }

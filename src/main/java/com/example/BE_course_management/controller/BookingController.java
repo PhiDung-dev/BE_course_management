@@ -17,41 +17,42 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingController {
+
     BookingService bookingService;
+
     @PostMapping
-    public ApiResponse<BookingResponse> createBooking(@RequestBody BookingCreateRequest request)
-    {
+    public ApiResponse<BookingResponse> createBooking(@RequestBody BookingCreateRequest request) {
         return ApiResponse.<BookingResponse>builder()
                 .result(bookingService.createBooking(request))
                 .build();
     }
-    @PutMapping("/{bookingId}")
-    public ApiResponse<BookingResponse> updateBooking(@PathVariable("bookingId") String id, @RequestBody BookingUpdateRequest request)
-    {
-        return ApiResponse.<BookingResponse>builder()
-                .result(bookingService.updateBooking(id,request))
-                .build();
-    }
+
     @GetMapping
-    public ApiResponse<List<BookingResponse>> readBookings()
-    {
+    public ApiResponse<List<BookingResponse>> readBookings() {
         return ApiResponse.<List<BookingResponse>>builder()
                 .result(bookingService.readBookings())
                 .build();
     }
+
     @GetMapping("/{bookingId}")
-    public ApiResponse<BookingResponse> readBooking(@PathVariable("bookingId") String id)
-    {
+    public ApiResponse<BookingResponse> readBooking(@PathVariable("bookingId") String id) {
         return ApiResponse.<BookingResponse>builder()
                 .result(bookingService.readBooking(id))
                 .build();
     }
+
+    @PutMapping("/{bookingId}")
+    public ApiResponse<BookingResponse> updateBooking(@PathVariable("bookingId") String id, @RequestBody BookingUpdateRequest request) {
+        return ApiResponse.<BookingResponse>builder()
+                .result(bookingService.updateBooking(id,request))
+                .build();
+    }
+
     @DeleteMapping("/{bookingId}")
-    public ApiResponse<String> deleteBooking(@PathVariable("bookingId") String id)
-    {
+    public ApiResponse<String> deleteBooking(@PathVariable("bookingId") String id) {
+        bookingService.deleteBooking(id);
         return ApiResponse.<String>builder()
-                .code(1000)
-                .message("Booking has id = " + id + "deleted succesfully")
+                .message("Booking has id = "+ id +"deleted successfully")
                 .build();
     }
 

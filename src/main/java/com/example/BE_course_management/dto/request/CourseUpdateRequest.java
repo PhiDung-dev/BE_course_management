@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -14,7 +15,8 @@ public class CourseUpdateRequest {
 
     String title;
     String description;
-    int slot;
+    Integer slot;
     BigDecimal price;
+    List<String> images;
 
 }

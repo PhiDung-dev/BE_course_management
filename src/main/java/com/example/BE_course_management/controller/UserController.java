@@ -18,40 +18,35 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 
 public class UserController {
+
     UserService userService;
 
     @PostMapping
-    public ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request)
-    {
-
+    public ApiResponse<UserResponse> createUser(@RequestBody UserCreateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.createUser(request))
                 .build();
     }
 
-    @GetMapping("/{userId}")
-    public ApiResponse<UserResponse> readUser(@PathVariable("userId") String id )
-    {
-        return ApiResponse.<UserResponse>builder()
-                .result(userService.readUser(id))
-                .build();
-    }
-
     @GetMapping
-    public ApiResponse<List<UserResponse>> readUsers()
-    {
+    public ApiResponse<List<UserResponse>> readUsers() {
         return ApiResponse.<List<UserResponse>>builder()
                 .result(userService.readUsers())
                 .build();
     }
 
+    @GetMapping("/{userId}")
+    public ApiResponse<UserResponse> readUser(@PathVariable("userId") String id) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.readUser(id))
+                .build();
+    }
+
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request)
-    {
+    public ApiResponse<UserResponse> updateUser(@PathVariable("userId") String id, @RequestBody UserUpdateRequest request) {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.updateUser(id,request))
                 .build();
     }
-
 
 }

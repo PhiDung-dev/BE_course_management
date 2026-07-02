@@ -15,25 +15,27 @@ public enum ErrorCode {
     COURSE_EXISTED(1005, "course existed"),
     COURSE_NOT_FOUND(1006, "course not found"),
     SCHEDULE_NOT_FOUND(1007, "schedule not found"),
-    BOOKING_NOT_FOUND(1008, "booking not found"),
-    PAYMENT_EXISTED(1009, "payment existed"),
-    PAYMENT_NOT_FOUND(1010, "payment not found"),
-    PAYMENT_ALREADY_PROCESSED(1300,"payment already processed"),
-    RATING_EXISTED(1011, "rating existed"),
-    RATING_NOT_FOUND(1012, "rating not found"),
+    SCHEDULE_CONFLICT(1088, "schedule conflict"),
+    BOOKING_NOT_FOUND(1009, "booking not found"),
+    PAYMENT_EXISTED(1010, "payment existed"),
+    PAYMENT_NOT_FOUND(1011, "payment not found"),
+    PAYMENT_ALREADY_PROCESSED(1012,"payment already processed"),
+    RATING_EXISTED(1013, "rating existed"),
+    RATING_NOT_FOUND(1014, "rating not found"),
     NOT_ENOUGH_SLOT(1015, "not enough slot"),
+    COURSE_ALREADY_IN_CART(1016,"course already in cart"),
+    COURSE_NOT_FOUND_IN_CART(1017,"course not found in cart"),
+    TEACHER_ALREADY_BUSY(1018,"teacher already busy"),
+    CLASSROOM_ALREADY_OCCUPIED(1019,"class room already occupied"),
+    CLASSROOM_EXISTED(1020, "class room existed"),
+    CLASSROOM_NOT_FOUND(1021,"class room not found "),
+    PASSWORD_NOT_MATCH(1022, "password not match"),
+    ROLE_NOT_FOUND(1023, "role not found"),
+    UNAUTHENTICATED(1234, "unauthenticated"),
     OTHERS_ERROR(9999, "others error"),
-    COURSE_ALREADY_IN_CART(1120,"course already in cart"),
-    COURSE_NOT_FOUND_IN_CART(1121,"course not found in cart"),
-    TEACHER_ALREADY_BUSY(1500,"teacher already busy"),
-    CLASSROOM_ALREADY_OCCUPIED(1511,"class room already occupied"),
-    CLASSROOM_NOT_FOUND(1302,"class room not found ");
+    ;
 
     private final int code;
     private final String message;
-
-
-
-
 
 }

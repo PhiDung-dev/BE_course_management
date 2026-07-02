@@ -8,10 +8,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum PaymentStatus {
 
-    PENDING("Payment pending"),
-    SUCCESS("Payment success"),
-    FAILED("Payment failed"),
-    CANCELLED("Payment cancelled");
+    PENDING("PENDING"),
+    SUCCESS("SUCCESS"),
+    CANCELLED("CANCELLED");
 
    private final String status;
 

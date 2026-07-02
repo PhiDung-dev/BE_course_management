@@ -3,7 +3,6 @@ package com.example.BE_course_management.controller;
 import com.example.BE_course_management.dto.ApiResponse;
 import com.example.BE_course_management.dto.request.RatingCreateRequest;
 import com.example.BE_course_management.dto.response.RatingResponse;
-import com.example.BE_course_management.entity.Rating;
 import com.example.BE_course_management.service.RatingService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -13,44 +12,40 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/ratings")
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class RatingController {
+
     RatingService ratingService;
 
     @PostMapping
-    public ApiResponse<RatingResponse> crateRating (@RequestBody RatingCreateRequest request)
-    {
+    public ApiResponse<RatingResponse> crateRating (@RequestBody RatingCreateRequest request) {
         return ApiResponse.<RatingResponse>builder()
                 .result(ratingService.createRating(request))
                 .build();
     }
 
-    @GetMapping("/{ratingId}")
-    public ApiResponse<RatingResponse> readRating(@PathVariable("ratingId") String id)
-    {
-        return ApiResponse.<RatingResponse>builder()
-                .result(ratingService.readRating(id))
-                .build();
-    }
-
     @GetMapping
-    public ApiResponse<List<RatingResponse>> readRatings()
-    {
+    public ApiResponse<List<RatingResponse>> readRatings() {
         return ApiResponse.<List<RatingResponse>>builder()
                 .result(ratingService.readRatings())
                 .build();
     }
 
-    @DeleteMapping("/{ratingId}")
-    public ApiResponse<String> deleteRating(@PathVariable("ratingId") String id)
-    {
-        ratingService.deleteRating(id);
-
-        return ApiResponse.<String>builder()
-                .code(1000)
-                .message("rating has id : " + id + " deleted succesfully")
+    @GetMapping("/{ratingId}")
+    public ApiResponse<RatingResponse> readRating(@PathVariable("ratingId") String id) {
+        return ApiResponse.<RatingResponse>builder()
+                .result(ratingService.readRating(id))
                 .build();
     }
+
+    @DeleteMapping("/{ratingId}")
+    public ApiResponse<String> deleteRating(@PathVariable("ratingId") String id) {
+        ratingService.deleteRating(id);
+        return ApiResponse.<String>builder()
+                .message("Rating has id = "+ id +"deleted successfully")
+                .build();
+    }
+
 }

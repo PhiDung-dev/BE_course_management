@@ -16,10 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     @Bean
-    PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 // Tắt CSRF (Bắt buộc phải tắt thì mới test được các method POST, PUT, DELETE trên Postman)
@@ -31,4 +27,10 @@ public class SecurityConfig {
 
         return http.build();
     }
+
+    @Bean
+    PasswordEncoder passwordEncoder(){
+        return new BCryptPasswordEncoder(10);
+    }
+
 }

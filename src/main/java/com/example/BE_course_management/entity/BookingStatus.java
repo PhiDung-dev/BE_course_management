@@ -7,9 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum BookingStatus {
 
-    PENDING("Pending confirmation"),
-    CONFIRMED("Confirmed");
-
+    PENDING("PENDING"),
+    CONFIRMED("CONFIRMED");
 
     private final String status;
+
 }
