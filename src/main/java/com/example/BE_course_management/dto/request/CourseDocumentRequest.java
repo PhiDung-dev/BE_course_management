@@ -3,21 +3,14 @@ package com.example.BE_course_management.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseUpdateRequest {
+public class CourseDocumentRequest {
 
     String title;
-    String description;
-    Integer slot;
-    BigDecimal price;
-    List<String> images;
-    List<CourseDocumentRequest> documents;
+    String url;
 
 }

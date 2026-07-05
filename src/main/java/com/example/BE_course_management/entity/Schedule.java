@@ -7,6 +7,7 @@ import lombok.experimental.FieldDefaults;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -26,7 +27,7 @@ public class Schedule {
     DayOfWeek dayOfWeek;
     LocalDate startDate;
     LocalDate endDate;
-
+    Integer slot;
     @ManyToOne
     @JoinColumn(name = "classRoom_id")
     ClassRoom classRoom;
@@ -38,5 +39,8 @@ public class Schedule {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     User teacher;
+
+    @OneToMany(mappedBy = "schedule")
+    List<Booking> booking;
 
 }

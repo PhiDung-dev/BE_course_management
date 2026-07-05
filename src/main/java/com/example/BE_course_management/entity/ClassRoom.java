@@ -19,6 +19,7 @@ public class ClassRoom {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String roomNumber;
+    @Enumerated(EnumType.STRING)
     ClassRoomStatus status;
 
     @OneToMany(mappedBy = "classRoom")

@@ -19,5 +19,6 @@ public class CourseResponse {
     Integer slot;
     BigDecimal price;
     List<String> imgs;
+    List<CourseDocumentResponse> documents;
 
 }

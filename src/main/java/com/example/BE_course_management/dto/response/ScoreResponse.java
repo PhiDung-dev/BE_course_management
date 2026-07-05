@@ -1,20 +1,23 @@
 package com.example.BE_course_management.dto.response;
 
-import com.example.BE_course_management.entity.AccountStatus;
-import com.example.BE_course_management.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.math.BigDecimal;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AccountResponse {
+public class ScoreResponse {
 
     String id;
-    String username;
-    AccountStatus status;
-    RoleResponse role;
+    BigDecimal attendanceScore;
+    BigDecimal midtermScore;
+    BigDecimal finalScore;
+    BigDecimal averageScore;
+    String classification;
+    PaymentResponse payment;
 
 }

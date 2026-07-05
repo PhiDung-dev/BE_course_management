@@ -18,5 +18,6 @@ public class CourseCreateRequest {
     Integer slot;
     BigDecimal price;
     List<String> images;
+    List<CourseDocumentRequest> documents;
 
 }

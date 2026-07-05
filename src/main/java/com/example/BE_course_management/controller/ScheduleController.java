@@ -52,7 +52,7 @@ public class ScheduleController {
     public ApiResponse<String> deleteSchedule(@PathVariable("scheduleId") String scheduleId) {
         scheduleService.deleteSchedule(scheduleId);
         return ApiResponse.<String>builder()
-                .message("Schedule has id = "+ scheduleId +"deleted successfully")
+                .message("Schedule has id = "+ scheduleId +" deleted successfully")
                 .build();
     }
 

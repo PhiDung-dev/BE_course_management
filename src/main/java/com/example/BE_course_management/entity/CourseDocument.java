@@ -11,22 +11,16 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Account {
+public class CourseDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @Column(nullable = false, unique = true)
-    String username;
-    @Column(nullable = false)
-    String password;
-    @Enumerated(EnumType.STRING)
-    AccountStatus status;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    Role role;
+    String title;
+    String url;
 
-    @OneToOne(mappedBy = "account")
-    User user;
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    Course course;
 
 }

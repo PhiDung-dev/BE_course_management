@@ -52,7 +52,7 @@ public class CourseController {
     public ApiResponse<String> deleteCourse(@PathVariable("courseId") String id) {
         courseService.deleteCourse(id);
         return ApiResponse.<String>builder()
-                .message("Course has id = "+ id + "deleted successfully")
+                .message("Course has id = "+ id + " deleted successfully")
                 .build();
     }
 

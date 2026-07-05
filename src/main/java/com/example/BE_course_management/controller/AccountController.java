@@ -43,7 +43,7 @@ public class AccountController {
     }
 
     @GetMapping("/{accountId}")
-    public ApiResponse<AccountResponse> reaAccount(@PathVariable("accountId") String id) {
+    public ApiResponse<AccountResponse> readAccount(@PathVariable("accountId") String id) {
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.readAccount(id))
                 .build();
@@ -57,7 +57,7 @@ public class AccountController {
     }
 
     @PutMapping("/status/{accountId}")
-    public ApiResponse<AccountResponse> deleteAccount(@PathVariable("accountId") String id, @RequestBody AccountUpdateStatusRequest request) {
+    public ApiResponse<AccountResponse> updateStatusAccount(@PathVariable("accountId") String id, @RequestBody AccountUpdateStatusRequest request) {
         return ApiResponse.<AccountResponse>builder()
                 .result(accountService.updateStatusAccount(id, request))
                 .build();

@@ -4,20 +4,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CourseUpdateRequest {
+public class ScoreUpdateRequest {
 
-    String title;
-    String description;
-    Integer slot;
-    BigDecimal price;
-    List<String> images;
-    List<CourseDocumentRequest> documents;
+    BigDecimal attendanceScore;
+    BigDecimal midtermScore;
+    BigDecimal finalScore;
 
 }

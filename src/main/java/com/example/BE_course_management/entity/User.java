@@ -20,7 +20,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
     String fullName;
+    @Column(unique = true)
     String email;
+    @Column(unique = true)
     String phoneNumber;
     String address;
     LocalDate dateOfBirth;
@@ -37,5 +39,5 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     List<Booking> bookings;
-
+    
 }

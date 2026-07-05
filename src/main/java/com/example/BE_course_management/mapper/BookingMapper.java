@@ -10,10 +10,10 @@ import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CourseMapper.class, UserMapper.class})
+@Mapper(componentModel = "spring", uses = {ScheduleMapper.class, UserMapper.class})
 public interface BookingMapper {
 
-    @Mapping(target = "course", ignore = true)
+    @Mapping(target = "schedule", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "totalPrice", ignore = true)
     @Mapping(target = "status", ignore = true)

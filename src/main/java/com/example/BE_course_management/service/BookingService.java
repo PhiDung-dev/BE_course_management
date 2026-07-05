@@ -3,15 +3,13 @@ package com.example.BE_course_management.service;
 import com.example.BE_course_management.dto.request.BookingCreateRequest;
 import com.example.BE_course_management.dto.request.BookingUpdateRequest;
 import com.example.BE_course_management.dto.response.BookingResponse;
-import com.example.BE_course_management.entity.Booking;
-import com.example.BE_course_management.entity.BookingStatus;
-import com.example.BE_course_management.entity.Course;
-import com.example.BE_course_management.entity.User;
+import com.example.BE_course_management.entity.*;
 import com.example.BE_course_management.exception.AppException;
 import com.example.BE_course_management.exception.ErrorCode;
 import com.example.BE_course_management.mapper.BookingMapper;
 import com.example.BE_course_management.repository.BookingRepository;
 import com.example.BE_course_management.repository.CourseRepository;
+import com.example.BE_course_management.repository.ScheduleRepository;
 import com.example.BE_course_management.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,22 +25,38 @@ public class BookingService {
 
     BookingRepository bookingRepository;
     BookingMapper bookingMapper;
-    CourseRepository courseRepository;
+    ScheduleRepository scheduleRepository;
     UserRepository userRepository;
 
     public BookingResponse createBooking(BookingCreateRequest request) {
-        Booking booking = bookingMapper.toBooking(request);
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(()->new AppException(ErrorCode.COURSE_NOT_FOUND));
+        if(bookingRepository.existsByUserIdAndScheduleId(request.getUserId(), request.getScheduleId())) {
+            throw new AppException(ErrorCode.BOOKING_EXISTED);
+        }
+        Schedule schedule = scheduleRepository.findById(request.getScheduleId()).orElseThrow(()->new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
+        if(schedule.getSlot()<=0) {
+            throw new AppException(ErrorCode.SLOT_UNAVAILABLE);
+        }
         User user = userRepository.findById(request.getUserId()).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
-        booking.setCourse(course);
+        Booking booking = bookingMapper.toBooking(request);
+        booking.setSchedule(schedule);
         booking.setUser(user);
         booking.setStatus(BookingStatus.PENDING);
-        booking.setTotalPrice(course.getPrice());
+        booking.setTotalPrice(schedule.getCourse().getPrice());
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
 
     public List<BookingResponse> readBookings() {
         return bookingMapper.toBookingResponseList(bookingRepository.findAll());
+    }
+
+    public List<BookingResponse> readBookingsByUserId(String userId) {
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        return bookingMapper.toBookingResponseList(bookings);
+    }
+
+    public List<BookingResponse> readBookingsByStatus(String status) {
+        List<Booking> bookings = bookingRepository.findByStatus(status);
+        return bookingMapper.toBookingResponseList(bookings);
     }
 
     public BookingResponse readBooking(String id) {

@@ -13,26 +13,20 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Booking {
+public class Score {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
-    @Lob
-    String description;
+    BigDecimal attendanceScore;
+    BigDecimal midtermScore;
+    BigDecimal finalScore;
+    BigDecimal averageScore;
     @Enumerated(EnumType.STRING)
-    BookingStatus status;
-    BigDecimal totalPrice;
+    Classification classification;
 
-    @ManyToOne
-    @JoinColumn(name = "schedule_id")
-    Schedule schedule;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    User user;
-
-    @OneToOne(mappedBy = "booking")
+    @OneToOne
+    @JoinColumn(name = "payment_id")
     Payment payment;
 
 }

@@ -26,7 +26,7 @@ public class CartController {
                 .build();
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ApiResponse<List<CartResponse>> readCarts(@PathVariable("userId") String userId) {
         return ApiResponse.<List<CartResponse>>builder()
                 .result(cartService.readCarts(userId))
@@ -37,7 +37,7 @@ public class CartController {
     public ApiResponse<String> deleteCart(@PathVariable("cartId") String id) {
         cartService.deleteCart(id);
         return ApiResponse.<String>builder()
-                .message("Cart has id = "+ id +"deleted successfully")
+                .message("Cart has id = "+ id +" deleted successfully")
                 .build();
     }
 

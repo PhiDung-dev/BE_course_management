@@ -33,8 +33,8 @@ public class ScheduleService {
     CourseRepository courseRepository;
 
     public ScheduleResponse createSchedule(ScheduleCreateRequest request) {
-        List<Schedule> teacherSchedules = scheduleRepository.findScheduleByTeacherId(request.getTeacherId());
-        List<Schedule> roomSchedule = scheduleRepository.findScheduleByClassRoomId(request.getClassRoomId());
+        List<Schedule> teacherSchedules = scheduleRepository.findByTeacherId(request.getTeacherId());
+        List<Schedule> roomSchedule = scheduleRepository.findByClassRoomId(request.getClassRoomId());
         teacherSchedules.forEach(schedule->{
             if(isConflict(schedule, request)){
                 throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
@@ -56,7 +56,7 @@ public class ScheduleService {
     }
 
     public List<ScheduleResponse> readSchedules() {
-        return scheduleMapper.toScheduleList(scheduleRepository.findAll());
+        return scheduleMapper.toScheduleResponseList(scheduleRepository.findAll());
     }
 
     public ScheduleResponse readSchedule(String id) {
@@ -64,23 +64,44 @@ public class ScheduleService {
         return scheduleMapper.toScheduleResponse(schedule);
     }
 
+//    public ScheduleResponse updateSchedule(String id, ScheduleUpdateRequest request) {
+//        Schedule schedule = scheduleRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
+//        List<Schedule> teacherSchedule =  scheduleRepository.findByTeacherId(request.getTeacherId());
+//        List<Schedule> roomSchedule = scheduleRepository.findByClassRoomId(request.getClassRoomId());
+//        teacherSchedule.forEach(s->{
+//            if(isConflict(s, request)) {
+//                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
+//            }
+//        });
+//        roomSchedule.forEach(s->{
+//            if(isConflict(s, request)) {
+//                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
+//            }
+//        });
+//        scheduleMapper.updateSchedule(schedule,request);
+//        User teacher = userRepository.findById(request.getTeacherId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
+//        ClassRoom classRoom = classRoomRepository.findById(request.getClassRoomId()).orElseThrow(()-> new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
+//        schedule.setTeacher(teacher);
+//        schedule.setClassRoom(classRoom);
+//        return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
+//    }
     public ScheduleResponse updateSchedule(String id, ScheduleUpdateRequest request) {
-        Schedule schedule = scheduleRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
-        List<Schedule> teacherSchedule =  scheduleRepository.findScheduleByTeacherId(request.getTeacherId());
-        List<Schedule> roomSchedule = scheduleRepository.findScheduleByClassRoomId(request.getClassRoomId());
-        teacherSchedule.forEach(s->{
-            if(isConflict(s, request)) {
+        Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
+        List<Schedule> teacherSchedules = scheduleRepository.findByTeacherId(request.getTeacherId());
+        List<Schedule> roomSchedules = scheduleRepository.findByClassRoomId(request.getClassRoomId());
+        teacherSchedules.forEach(s -> {
+            if (!s.getId().equals(schedule.getId()) && isConflict(s, request)) {
                 throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
             }
         });
-        roomSchedule.forEach(s->{
-            if(isConflict(s, request)) {
+        roomSchedules.forEach(s -> {
+            if (!s.getId().equals(schedule.getId()) && isConflict(s, request)) {
                 throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
             }
         });
-        scheduleMapper.updateSchedule(schedule,request);
-        User teacher = userRepository.findById(request.getTeacherId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
-        ClassRoom classRoom = classRoomRepository.findById(request.getClassRoomId()).orElseThrow(()-> new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
+        scheduleMapper.updateSchedule(schedule, request);
+        User teacher = userRepository.findById(request.getTeacherId()).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_FOUND));
+        ClassRoom classRoom = classRoomRepository.findById(request.getClassRoomId()).orElseThrow(() -> new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
         schedule.setTeacher(teacher);
         schedule.setClassRoom(classRoom);
         return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));

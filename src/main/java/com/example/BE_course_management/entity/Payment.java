@@ -29,4 +29,7 @@ public class Payment {
     @OneToOne(mappedBy = "payment")
     Rating rating;
 
+    @OneToOne(mappedBy = "payment")
+    Score score;
+
 }

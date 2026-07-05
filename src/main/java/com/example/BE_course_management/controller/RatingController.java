@@ -20,7 +20,7 @@ public class RatingController {
     RatingService ratingService;
 
     @PostMapping
-    public ApiResponse<RatingResponse> crateRating (@RequestBody RatingCreateRequest request) {
+    public ApiResponse<RatingResponse> createRating (@RequestBody RatingCreateRequest request) {
         return ApiResponse.<RatingResponse>builder()
                 .result(ratingService.createRating(request))
                 .build();
@@ -44,7 +44,7 @@ public class RatingController {
     public ApiResponse<String> deleteRating(@PathVariable("ratingId") String id) {
         ratingService.deleteRating(id);
         return ApiResponse.<String>builder()
-                .message("Rating has id = "+ id +"deleted successfully")
+                .message("Rating has id = "+ id +" deleted successfully")
                 .build();
     }
 

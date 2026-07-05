@@ -34,6 +34,20 @@ public class PaymentController {
                 .build();
     }
 
+    @GetMapping("/booking/{bookingId}")
+    public ApiResponse<PaymentResponse> readPaymentByBookingId(@PathVariable("bookingId") String bookingId){
+        return ApiResponse.<PaymentResponse>builder()
+                .result(paymentService.readPaymentByBookingId(bookingId))
+                .build();
+    }
+
+    @GetMapping("/status/{status}")
+    public ApiResponse<List<PaymentResponse>> readPaymentsByStatus(@PathVariable("status") String status) {
+        return ApiResponse.<List<PaymentResponse>>builder()
+                .result(paymentService.readPaymentsByStatus(status))
+                .build();
+    }
+
     @GetMapping("/{paymentId}")
     public ApiResponse<PaymentResponse> readPayment(@PathVariable("paymentId") String id) {
         return ApiResponse.<PaymentResponse>builder()

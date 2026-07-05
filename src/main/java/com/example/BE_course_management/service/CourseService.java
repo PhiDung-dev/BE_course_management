@@ -4,6 +4,7 @@ import com.example.BE_course_management.dto.request.CourseCreateRequest;
 import com.example.BE_course_management.dto.request.CourseUpdateRequest;
 import com.example.BE_course_management.dto.response.CourseResponse;
 import com.example.BE_course_management.entity.Course;
+import com.example.BE_course_management.entity.CourseDocument;
 import com.example.BE_course_management.entity.CourseImage;
 import com.example.BE_course_management.exception.AppException;
 import com.example.BE_course_management.exception.ErrorCode;
@@ -35,7 +36,15 @@ public class CourseService {
                      .course(course)
                      .build();
          }).toList();
+         List<CourseDocument> courseDocuments = request.getDocuments().stream().map(doc -> {
+             return CourseDocument.builder()
+                     .title(doc.getTitle())
+                     .url(doc.getUrl())
+                     .course(course)
+                     .build();
+         }).toList();
          course.setCourseImages(courseImages);
+         course.setCourseDocuments(courseDocuments);
          return courseMapper.toCourseResponse(courseRepository.save(course));
      }
 
@@ -51,12 +60,22 @@ public class CourseService {
      public CourseResponse updateCourse(String id, CourseUpdateRequest request) {
          Course course = courseRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.COURSE_NOT_FOUND));
          courseMapper.updateCourse(course,request);
+         course.getCourseImages().clear();
          request.getImages().forEach(img-> {
              CourseImage courseImage = CourseImage.builder()
                      .url(img)
                      .course(course)
                      .build();
              course.getCourseImages().add(courseImage);
+         });
+         course.getCourseDocuments().clear();
+         request.getDocuments().forEach(doc-> {
+             CourseDocument courseDocument = CourseDocument.builder()
+                     .title(doc.getTitle())
+                     .url(doc.getUrl())
+                     .course(course)
+                     .build();
+             course.getCourseDocuments().add(courseDocument);
          });
          return courseMapper.toCourseResponse(courseRepository.save(course));
      }

@@ -20,7 +20,7 @@ public interface ScheduleMapper {
 
     ScheduleResponse toScheduleResponse(Schedule schedule);
 
-    List<ScheduleResponse> toScheduleList(List<Schedule> schedules);
+    List<ScheduleResponse> toScheduleResponseList(List<Schedule> schedules);
 
     @Mapping(target = "teacher", ignore = true)
     @Mapping(target = "classRoom", ignore = true)

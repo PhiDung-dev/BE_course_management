@@ -16,7 +16,7 @@ public class BookingResponse {
     String description;
     String status;
     BigDecimal totalPrice;
-    CourseResponse course;
+    ScheduleResponse schedule;
     UserResponse user;
 
 }

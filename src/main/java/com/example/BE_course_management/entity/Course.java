@@ -19,6 +19,7 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     String id;
+    @Column(unique=true)
     String title;
     @Lob
     String description;
@@ -34,7 +35,7 @@ public class Course {
     @OneToMany(mappedBy = "course")
     List<Cart> carts;
 
-    @OneToMany(mappedBy = "course")
-    List<Booking> bookings;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<CourseDocument> courseDocuments;
 
 }

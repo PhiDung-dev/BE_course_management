@@ -52,7 +52,7 @@ public class ClassRoomController {
     public ApiResponse<String> deleteClassRooms(@PathVariable("classRoomId") String id) {
         classRoomService.deleteClassRoom(id);
         return ApiResponse.<String>builder()
-                .message("Class room has id = "+ id +"deleted successfully")
+                .message("Class room has id = "+ id +" deleted successfully")
                 .build();
     }
 

@@ -34,6 +34,20 @@ public class BookingController {
                 .build();
     }
 
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<BookingResponse>> readBookingsByUserId(@PathVariable("userId") String id) {
+        return ApiResponse.<List<BookingResponse>>builder()
+                .result(bookingService.readBookingsByUserId(id))
+                .build();
+    }
+
+    @GetMapping("/status/{status}")
+    public ApiResponse<List<BookingResponse>> readBookingsStatus(@PathVariable("status") String status) {
+        return ApiResponse.<List<BookingResponse>>builder()
+                .result(bookingService.readBookingsByStatus(status))
+                .build();
+    }
+
     @GetMapping("/{bookingId}")
     public ApiResponse<BookingResponse> readBooking(@PathVariable("bookingId") String id) {
         return ApiResponse.<BookingResponse>builder()
@@ -52,7 +66,7 @@ public class BookingController {
     public ApiResponse<String> deleteBooking(@PathVariable("bookingId") String id) {
         bookingService.deleteBooking(id);
         return ApiResponse.<String>builder()
-                .message("Booking has id = "+ id +"deleted successfully")
+                .message("Booking has id = "+ id +" deleted successfully")
                 .build();
     }
 
