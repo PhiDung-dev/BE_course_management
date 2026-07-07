@@ -34,6 +34,13 @@ public class ScheduleController {
                 .build();
     }
 
+    @GetMapping("/user/{userId}")
+    public ApiResponse<List<ScheduleResponse>> readScheduleByUserId(@PathVariable("userId") String userId) {
+        return ApiResponse.<List<ScheduleResponse>>builder()
+                .result(scheduleService.readSchedulesByUserId(userId))
+                .build();
+    }
+
     @GetMapping("/{scheduleId}")
     public ApiResponse<ScheduleResponse> readSchedule(@PathVariable("scheduleId") String scheduleId) {
         return ApiResponse.<ScheduleResponse>builder()

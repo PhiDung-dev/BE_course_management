@@ -58,6 +58,7 @@ public class AuthenticationService {
                 .issueTime(new Date())
                 .expirationTime(new Date(Instant.now().plus(1, ChronoUnit.HOURS).toEpochMilli()))
                 .claim("scope", account.getRole().getRoleName())
+                .claim("accountId", account.getId())
                 .build();
         SignedJWT signedJWT = new SignedJWT(jwsHeader, jwtClaimsSet);
         JWSSigner jwsSigner = new MACSigner(secretKey);

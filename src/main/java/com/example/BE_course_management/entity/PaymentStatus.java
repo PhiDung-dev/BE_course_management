@@ -1,6 +1,5 @@
 package com.example.BE_course_management.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,8 +8,8 @@ import lombok.RequiredArgsConstructor;
 public enum PaymentStatus {
 
     PENDING("PENDING"),
-    SUCCESS("SUCCESS"),
-    CANCELLED("CANCELLED");
+    SUCCESS("SUCCESS")
+    ;
 
    private final String status;
 

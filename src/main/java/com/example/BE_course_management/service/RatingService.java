@@ -13,6 +13,7 @@ import com.example.BE_course_management.repository.RatingRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class RatingService {
     RatingMapper ratingMapper;
     PaymentRepository paymentRepository;
 
+    @PreAuthorize("@securityService.isOwnerPayment(#request.paymentId, authentication.name)")
     public RatingResponse createRating(RatingCreateRequest request) {
         if(ratingRepository.existsByPaymentId(request.getPaymentId())) {
             throw new AppException(ErrorCode.RATING_EXISTED);
@@ -46,13 +48,6 @@ public class RatingService {
     public RatingResponse readRating(String id) {
         Rating rating = ratingRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.RATING_NOT_FOUND));
         return ratingMapper.toRatingResponse(rating);
-    }
-
-    public void deleteRating(String id) {
-        if(!ratingRepository.existsById(id)) {
-            throw new AppException(ErrorCode.RATING_NOT_FOUND);
-        }
-        ratingRepository.deleteById(id);
     }
 
 }

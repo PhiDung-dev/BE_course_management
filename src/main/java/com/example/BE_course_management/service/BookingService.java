@@ -8,12 +8,12 @@ import com.example.BE_course_management.exception.AppException;
 import com.example.BE_course_management.exception.ErrorCode;
 import com.example.BE_course_management.mapper.BookingMapper;
 import com.example.BE_course_management.repository.BookingRepository;
-import com.example.BE_course_management.repository.CourseRepository;
 import com.example.BE_course_management.repository.ScheduleRepository;
 import com.example.BE_course_management.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +28,7 @@ public class BookingService {
     ScheduleRepository scheduleRepository;
     UserRepository userRepository;
 
+    @PreAuthorize("@securityService.isOwnerUser(#request.userId, authentication.name)")
     public BookingResponse createBooking(BookingCreateRequest request) {
         if(bookingRepository.existsByUserIdAndScheduleId(request.getUserId(), request.getScheduleId())) {
             throw new AppException(ErrorCode.BOOKING_EXISTED);
@@ -45,31 +46,37 @@ public class BookingService {
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BookingResponse> readBookings() {
         return bookingMapper.toBookingResponseList(bookingRepository.findAll());
     }
 
+    @PreAuthorize("@securityService.isOwnerUser(#userId, authentication.name)")
     public List<BookingResponse> readBookingsByUserId(String userId) {
         List<Booking> bookings = bookingRepository.findByUserId(userId);
         return bookingMapper.toBookingResponseList(bookings);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BookingResponse> readBookingsByStatus(String status) {
         List<Booking> bookings = bookingRepository.findByStatus(status);
         return bookingMapper.toBookingResponseList(bookings);
     }
 
+    @PreAuthorize("@securityService.isOwnerBooking(#id, authentication.name)")
     public BookingResponse readBooking(String id) {
         Booking booking = bookingRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.BOOKING_NOT_FOUND));
         return bookingMapper.toBookingResponse(booking);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public BookingResponse updateBooking(String id, BookingUpdateRequest request) {
         Booking booking = bookingRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.BOOKING_NOT_FOUND));
         bookingMapper.updateBooking(booking, request);
         return bookingMapper.toBookingResponse(bookingRepository.save(booking));
     }
 
+    @PreAuthorize("@securityService.isOwnerBooking(#id, authentication.name)")
     public void deleteBooking(String id) {
         if(!bookingRepository.existsById(id)) {
             throw new AppException(ErrorCode.BOOKING_NOT_FOUND);

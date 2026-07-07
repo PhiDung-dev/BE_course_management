@@ -8,21 +8,20 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalException {
 
-    @ExceptionHandler(value = AppException.class)
-    public ResponseEntity<ApiResponse<Void>> handlerAppException(AppException exception)
-    {
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleException(Exception exception) {
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
-                .code(exception.getErrorCode().getCode())
-                .message(exception.getErrorCode().getMessage())
+                .code(ErrorCode.OTHERS_ERROR.getCode())
+                .message(exception.getMessage())
                 .build();
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
-    public ResponseEntity<ApiResponse<Void>> handlException(Exception exception)
-    {
+    @ExceptionHandler(value = AppException.class)
+    public ResponseEntity<ApiResponse<Void>> handlerAppException(AppException exception) {
         ApiResponse<Void> apiResponse = ApiResponse.<Void>builder()
-                .code(ErrorCode.OTHERS_ERROR.getCode())
-                .message(exception.getMessage())
+                .code(exception.getErrorCode().getCode())
+                .message(exception.getErrorCode().getMessage())
                 .build();
         return ResponseEntity.badRequest().body(apiResponse);
     }

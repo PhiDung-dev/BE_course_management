@@ -17,6 +17,7 @@ import com.example.BE_course_management.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,6 +33,7 @@ public class ScheduleService {
     UserRepository userRepository;
     CourseRepository courseRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public ScheduleResponse createSchedule(ScheduleCreateRequest request) {
         List<Schedule> teacherSchedules = scheduleRepository.findByTeacherId(request.getTeacherId());
         List<Schedule> roomSchedule = scheduleRepository.findByClassRoomId(request.getClassRoomId());
@@ -55,36 +57,24 @@ public class ScheduleService {
         return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<ScheduleResponse> readSchedules() {
         return scheduleMapper.toScheduleResponseList(scheduleRepository.findAll());
     }
 
+    @PreAuthorize("@securityService.isOwnerUser(#userId, authentication.name)")
+    public List<ScheduleResponse> readSchedulesByUserId(String userId) {
+        List<Schedule> schedules = scheduleRepository.findAllByBookingsUserId(userId);
+        return scheduleMapper.toScheduleResponseList(schedules);
+    }
+
+    @PreAuthorize("@securityService.isOwnerTeacherOfSchedule(#id, authentication.name) or @securityService.isStudentOfSchedule(#id, authentication.name)")
     public ScheduleResponse readSchedule(String id) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
         return scheduleMapper.toScheduleResponse(schedule);
     }
 
-//    public ScheduleResponse updateSchedule(String id, ScheduleUpdateRequest request) {
-//        Schedule schedule = scheduleRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
-//        List<Schedule> teacherSchedule =  scheduleRepository.findByTeacherId(request.getTeacherId());
-//        List<Schedule> roomSchedule = scheduleRepository.findByClassRoomId(request.getClassRoomId());
-//        teacherSchedule.forEach(s->{
-//            if(isConflict(s, request)) {
-//                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
-//            }
-//        });
-//        roomSchedule.forEach(s->{
-//            if(isConflict(s, request)) {
-//                throw new AppException(ErrorCode.SCHEDULE_CONFLICT);
-//            }
-//        });
-//        scheduleMapper.updateSchedule(schedule,request);
-//        User teacher = userRepository.findById(request.getTeacherId()).orElseThrow(()-> new AppException(ErrorCode.USER_NOT_FOUND));
-//        ClassRoom classRoom = classRoomRepository.findById(request.getClassRoomId()).orElseThrow(()-> new AppException(ErrorCode.CLASSROOM_NOT_FOUND));
-//        schedule.setTeacher(teacher);
-//        schedule.setClassRoom(classRoom);
-//        return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
-//    }
+    @PreAuthorize("hasRole('ADMIN')")
     public ScheduleResponse updateSchedule(String id, ScheduleUpdateRequest request) {
         Schedule schedule = scheduleRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.SCHEDULE_NOT_FOUND));
         List<Schedule> teacherSchedules = scheduleRepository.findByTeacherId(request.getTeacherId());
@@ -107,6 +97,7 @@ public class ScheduleService {
         return scheduleMapper.toScheduleResponse(scheduleRepository.save(schedule));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteSchedule(String id) {
         if(!scheduleRepository.existsById(id)) {
             throw new AppException(ErrorCode.SCHEDULE_NOT_FOUND);

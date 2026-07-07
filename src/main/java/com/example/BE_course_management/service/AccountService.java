@@ -15,6 +15,7 @@ import com.example.BE_course_management.repository.RoleRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -41,6 +42,7 @@ public class AccountService {
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public AccountResponse createTeacherAccount(AccountCreateRequest request) {
         if(accountRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.ACCOUNT_EXISTED);
@@ -52,16 +54,19 @@ public class AccountService {
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isOwnerAccount(#id, authentication.name)")
     public AccountResponse readAccount(String id) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         return accountMapper.toAccountResponse(account);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<AccountResponse> readAccounts() {
         List<Account> accounts = accountRepository.findAll();
         return accountMapper.toAccountResponseList(accounts);
     }
 
+    @PreAuthorize("@securityService.isOwnerAccount(#id, authentication.name)")
     public AccountResponse updatePasswordAccount(String id, AccountUpdatePasswordRequest request) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         if(!passwordEncoder.matches(request.getCurrentPassword(), account.getPassword())) {
@@ -71,6 +76,7 @@ public class AccountService {
         return accountMapper.toAccountResponse(accountRepository.save(account));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public AccountResponse updateStatusAccount(String id, AccountUpdateStatusRequest request) {
         Account account = accountRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.ACCOUNT_NOT_FOUND));
         accountMapper.updateStatusAccount(account, request);

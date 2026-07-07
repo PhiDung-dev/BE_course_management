@@ -3,7 +3,6 @@ package com.example.BE_course_management.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Getter
 @Setter
@@ -12,7 +11,7 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ApiResponse <T>{
+public class ApiResponse <T> {
 
     @Builder.Default
     int code = 1000;

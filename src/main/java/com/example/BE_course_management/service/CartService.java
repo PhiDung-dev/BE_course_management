@@ -14,6 +14,7 @@ import com.example.BE_course_management.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class CartService {
     UserRepository userRepository;
     CourseRepository courseRepository;
 
+    @PreAuthorize("@securityService.isOwnerUser(#request.userId, authentication.name)")
     public CartResponse createCart(CartCreateRequest request) {
         User user = userRepository.findById(request.getUserId()).orElseThrow(()->new AppException(ErrorCode.USER_NOT_FOUND));
         Course course = courseRepository.findById(request.getCourseId()).orElseThrow(()->new AppException(ErrorCode.COURSE_NOT_FOUND));
@@ -41,6 +43,7 @@ public class CartService {
         return cartMapper.toCartResponse(cartRepository.save(cart));
     }
 
+    @PreAuthorize("@securityService.isOwnerUser(#userId, authentication.name)")
     public List<CartResponse> readCarts(String userId) {
         if(!userRepository.existsById(userId)) {
             throw new AppException(ErrorCode.USER_NOT_FOUND);
@@ -49,6 +52,7 @@ public class CartService {
         return cartMapper.toCartResponseList(carts);
     }
 
+    @PreAuthorize("@securityService.isOwnerCart(#id, authentication.name)")
     public void deleteCart(String id) {
         if(!cartRepository.existsById(id)) {
             throw new AppException(ErrorCode.COURSE_NOT_FOUND_IN_CART);

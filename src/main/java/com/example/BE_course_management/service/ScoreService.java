@@ -11,6 +11,7 @@ import com.example.BE_course_management.repository.ScoreRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,34 +26,36 @@ public class ScoreService {
     ScoreRepository scoreRepository;
     ScoreMapper scoreMapper;
 
+    @PreAuthorize("hasRole('TEACHER')")
     public List<ScoreResponse> readScores() {
         return scoreMapper.toScoreResponseList(scoreRepository.findAll());
     }
 
+    @PreAuthorize("@securityService.isOwnerPayment(#paymentId, authentication.name)")
     public ScoreResponse readScoreByPaymentId(String paymentId) {
         Score score = scoreRepository.findByPaymentId(paymentId).orElseThrow(()->new AppException(ErrorCode.SCORE_NOT_FOUND));
         return scoreMapper.toScoreResponse(score);
     }
 
+    @PreAuthorize("@securityService.isOwnerTeacherOfSchedule(#scheduleId, authentication.name)")
+    public List<ScoreResponse> readScoreByScheduleId(String scheduleId) {
+        List<Score> scores = scoreRepository.findByPaymentBookingScheduleId(scheduleId);
+        return scoreMapper.toScoreResponseList(scores);
+    }
+
+    @PreAuthorize("@securityService.isOwnerScore(#id, authentication.name) or @securityService.isOwnerTeacherOfScore(#id, authentication.name)")
     public ScoreResponse readScore(String id) {
         Score score = scoreRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.SCORE_NOT_FOUND));
         return scoreMapper.toScoreResponse(score);
     }
 
+    @PreAuthorize("@securityService.isOwnerTeacherOfScore(#id, authentication.name)")
     public ScoreResponse updateScore(String id, ScoreUpdateRequest request) {
         Score score = scoreRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.SCORE_NOT_FOUND));
         scoreMapper.updateScore(score, request);
+        score.setAverageScore(calculateScore(score.getAttendanceScore(), score.getMidtermScore(), score.getFinalScore()));
+        score.setClassification(classification(score.getAverageScore()));
         return scoreMapper.toScoreResponse(scoreRepository.save(score));
-    }
-
-    public List<ScoreResponse> calculateScoreAndClassification() {
-        List<Score> scores = scoreRepository.findAll();
-        scores.forEach(score->{
-            score.setAverageScore(calculateScore(score.getAttendanceScore(), score.getMidtermScore(), score.getFinalScore()));
-            score.setClassification(classification(score.getAverageScore()));
-            scoreRepository.save(score);
-        });
-        return scoreMapper.toScoreResponseList(scores);
     }
 
     private BigDecimal calculateScore(BigDecimal attendanceScore, BigDecimal midtermScore, BigDecimal finalScore) {

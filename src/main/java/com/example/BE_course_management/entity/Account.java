@@ -22,6 +22,7 @@ public class Account {
     String password;
     @Enumerated(EnumType.STRING)
     AccountStatus status;
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     Role role;

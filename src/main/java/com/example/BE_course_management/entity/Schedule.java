@@ -41,6 +41,6 @@ public class Schedule {
     User teacher;
 
     @OneToMany(mappedBy = "schedule")
-    List<Booking> booking;
+    List<Booking> bookings;
 
 }

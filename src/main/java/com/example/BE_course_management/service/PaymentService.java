@@ -11,6 +11,7 @@ import com.example.BE_course_management.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public class PaymentService {
     ScheduleRepository scheduleRepository;
     ScoreRepository scoreRepository;
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PaymentResponse createPayment(PaymentCreateRequest request) {
         if (paymentRepository.existsByBookingId(request.getBookingId())) {
             throw new AppException(ErrorCode.PAYMENT_EXISTED);
@@ -41,26 +43,31 @@ public class PaymentService {
         return paymentMapper.toPaymentResponse(paymentRepository.save(payment));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PaymentResponse> readPayments() {
         List<Payment> payments = paymentRepository.findAll();
         return paymentMapper.toPaymentResponseList(payments);
     }
 
+    @PreAuthorize("@securityService.isOwnerBooking(#bookingId, authentication.name)")
     public PaymentResponse readPaymentByBookingId(String bookingId){
         Payment payment = paymentRepository.findByBookingId(bookingId).orElseThrow(()->new AppException(ErrorCode.PAYMENT_NOT_FOUND));
         return paymentMapper.toPaymentResponse(payment);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public List<PaymentResponse> readPaymentsByStatus(String status) {
         List<Payment> payments = paymentRepository.findByStatus(status);
         return paymentMapper.toPaymentResponseList(payments);
     }
 
+    @PreAuthorize("@securityService.isOwnerPayment(#id, authentication.name)")
     public PaymentResponse readPayment(String id) {
         Payment payment = paymentRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.PAYMENT_NOT_FOUND));
         return paymentMapper.toPaymentResponse(payment);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public PaymentResponse updatePayment(String id, PaymentUpdateRequest request) {
         Payment payment = paymentRepository.findById(id).orElseThrow(() -> new AppException(ErrorCode.PAYMENT_NOT_FOUND));
         if (payment.getStatus() == PaymentStatus.SUCCESS) {

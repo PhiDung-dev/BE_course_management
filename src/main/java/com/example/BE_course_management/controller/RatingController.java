@@ -40,12 +40,4 @@ public class RatingController {
                 .build();
     }
 
-    @DeleteMapping("/{ratingId}")
-    public ApiResponse<String> deleteRating(@PathVariable("ratingId") String id) {
-        ratingService.deleteRating(id);
-        return ApiResponse.<String>builder()
-                .message("Rating has id = "+ id +" deleted successfully")
-                .build();
-    }
-
 }

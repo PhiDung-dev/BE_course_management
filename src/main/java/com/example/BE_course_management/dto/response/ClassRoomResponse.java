@@ -1,5 +1,6 @@
 package com.example.BE_course_management.dto.response;
 
+import com.example.BE_course_management.entity.ClassRoomStatus;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -12,6 +13,6 @@ public class ClassRoomResponse {
 
     String id;
     String roomNumber;
-    String status;
+    ClassRoomStatus status;
 
 }

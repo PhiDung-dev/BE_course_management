@@ -13,6 +13,7 @@ import com.example.BE_course_management.repository.CourseRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,8 @@ public class CourseService {
     CourseRepository courseRepository;
     CourseMapper courseMapper;
 
-     public CourseResponse createCourse(CourseCreateRequest request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CourseResponse createCourse(CourseCreateRequest request) {
          if(courseRepository.existsByTitle(request.getTitle().trim())) {
              throw new AppException(ErrorCode.COURSE_EXISTED);
          }
@@ -46,7 +48,7 @@ public class CourseService {
          course.setCourseImages(courseImages);
          course.setCourseDocuments(courseDocuments);
          return courseMapper.toCourseResponse(courseRepository.save(course));
-     }
+    }
 
     public CourseResponse readCourse(String id) {
         Course course = courseRepository.findById(id).orElseThrow(()->new AppException(ErrorCode.COURSE_NOT_FOUND));
@@ -57,7 +59,8 @@ public class CourseService {
         return courseMapper.toCourseResponseList(courseRepository.findAll());
     }
 
-     public CourseResponse updateCourse(String id, CourseUpdateRequest request) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public CourseResponse updateCourse(String id, CourseUpdateRequest request) {
          Course course = courseRepository.findById(id).orElseThrow(()-> new AppException(ErrorCode.COURSE_NOT_FOUND));
          courseMapper.updateCourse(course,request);
          course.getCourseImages().clear();
@@ -78,13 +81,14 @@ public class CourseService {
              course.getCourseDocuments().add(courseDocument);
          });
          return courseMapper.toCourseResponse(courseRepository.save(course));
-     }
+    }
 
-     public void deleteCourse(String id) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public void deleteCourse(String id) {
          if(!courseRepository.existsById(id)) {
              throw new AppException(ErrorCode.COURSE_NOT_FOUND);
          }
          courseRepository.deleteById(id);
-     }
+    }
 
 }
